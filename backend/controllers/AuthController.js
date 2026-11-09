@@ -3,11 +3,21 @@ const { body, validationResult } = require("express-validator");
 const { UserModel } = require("../model/UserModel");
 const { createSecretToken } = require("../util/SecretToken");
 
-// Cookie options — httpOnly so JS can't read the token
-const cookieOptions = {
+// Cookie options — httpOnly so JS can't read the token.
+// In production the frontend, dashboard and backend live on different
+// *.onrender.com subdomains, which browsers treat as different sites.
+// A "lax" cookie is never sent on cross-site requests, so production
+// needs sameSite "none" + secure.
+const isProd = process.env.NODE_ENV === "production";
+
+const baseCookieOptions = {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: isProd ? "none" : "lax",
+    secure: isProd,
+};
+
+const cookieOptions = {
+    ...baseCookieOptions,
     maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
 };
 
@@ -121,11 +131,8 @@ const login = async (req, res) => {
 // POST /logout
 const logout = async (req, res) => {
     try {
-        res.clearCookie("token", {
-            httpOnly: true,
-            sameSite: "lax",
-            secure: process.env.NODE_ENV === "production",
-        });
+        // Must match the options used when setting the cookie, or it won't clear
+        res.clearCookie("token", baseCookieOptions);
         return res.status(200).json({
             success: true,
             message: "Logged out successfully",
@@ -140,4 +147,3 @@ const logout = async (req, res) => {
 };
 
 module.exports = { signup, login, logout, signupValidation, loginValidation };
-
