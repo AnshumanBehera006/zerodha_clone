@@ -1,0 +1,36 @@
+const { Schema } = require("mongoose");
+
+const OrdersSchema = new Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        qty: {
+            type: Number,
+            required: true,
+        },
+        price: {
+            type: Number,
+            required: true,
+        },
+        mode: {
+            type: String,
+            enum: ["BUY", "SELL"],
+            required: true,
+        },
+        status: {
+            type: String,
+            enum: ["OPEN", "EXECUTED", "CANCELLED"],
+            default: "EXECUTED",
+        },
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: "user",
+            required: true,
+        },
+    },
+    { timestamps: true }
+);
+
+module.exports = { OrdersSchema };
