@@ -25,6 +25,12 @@ const url = process.env.MONGO_URL;
 
 const app = express();
 
+// Render (and most hosts) put one reverse proxy in front of the app.
+// Trust exactly that one hop so req.ip is the real client IP and
+// express-rate-limit can tell users apart. Don't use `true` — that lets
+// anyone spoof their IP via a fake X-Forwarded-For header.
+app.set("trust proxy", 1);
+
 // ─── Security & Middleware ──────────────────────────────────────────────
 app.use(helmet());
 app.use(cookieParser());
