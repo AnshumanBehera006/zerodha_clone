@@ -1,0 +1,30 @@
+#sell-window .header {
+  background: #df514c;
+}
+
+#sell-window .btn-red {
+  background: #df514c;
+  color: white;
+}
+
+#sell-window .btn-red:hover {
+  background: #e66a65;
+}
+
+#sell-window .btn-red:disabled {
+  background: #f0a3a0;
+  cursor: not-allowed;
+}
+
+.sell-error-text {
+  color: #df514c;
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.avail-qty-info {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
